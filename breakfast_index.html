@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head>
+    <title>XML3</title>
+    </head>
+    <body>
+   
+    <p id="demo"></p>
+    <p id="demo2"></p>
+    <button type="button" onclick="loadXML()">Change Content</button>
+   
+    <script>
+        var getFoods = [""];
+        var xmlDoc; // the XML contents of breakfast.xml
+        var bagelText; 
+        var bagelNode;
+
+        var bcn;
+        var bcp;
+        var bcd;
+        var bcc;
+        var bcntext;
+        var bcptext;
+        var bcdtext;
+        var bcctext;
+
+        var price;
+        var newPriceNode;
+        var newPrice;
+
+        function loadXML()
+        {
+            var xml = new XMLHttpRequest(); // the XML request
+				console.log("httpx request OK");
+            xml.onreadystatechange = function()
+                    {	
+							console.log("function def OK");
+                        if (this.readyState == 4 && this.status == 200)
+                        {
+                            document.getElementById("demo").innerHTML = this.responseText;
+                                console.log("first responseText OK");
+                            xmlDoc = this.responseXML; // retrieve XML contents of breakfast.xml and store them in xmlDoc
+                                console.log(xmlDoc);
+                                console.log("get XML contents OK");
+                            getFoods = xmlDoc.getElementsByTagName("food");
+                                console.log("get foods OK");
+
+                            bcn = xmlDoc.createElement("name");
+                            bcntext = xmlDoc.createTextNode("Yiddish Bagel ");
+                            bcn.appendChild(bcntext);
+                                console.log("make breakfast child name OK");
+
+                            bcp = xmlDoc.createElement("price");
+                            bcptext = xmlDoc.createTextNode("$4.00 ");
+                            bcp.appendChild(bcptext);
+                                console.log("make breakfast child price OK");
+
+                            bcd = xmlDoc.createElement("description");
+                            bcdtext = xmlDoc.createTextNode("A lightly toasted and buttered bagel. ");
+                            bcd.appendChild(bcdtext);
+                                console.log("make breakfast child description OK");
+
+                            bcc = xmlDoc.createElement("calories");
+                            bcctext = xmlDoc.createTextNode("350 ");
+                            bcc.appendChild(bcctext);
+                                console.log("make breakfast child cal OK");
+
+                            bagelNode = xmlDoc.getElementsByTagName("food")[0];
+                            bagelNode.replaceChild(bcn, bagelNode.childNodes[0]);
+                            bagelNode.replaceChild(bcp, bagelNode.childNodes[1]);
+                            bagelNode.replaceChild(bcd, bagelNode.childNodes[2]);
+                            bagelNode.replaceChild(bcc, bagelNode.childNodes[3]);
+                                console.log("replace children OK");
+                            
+                            for (var i = 0; i < getFoods.length; i++)
+                            {
+                                    console.log("for loop def OK");
+                                price = xmlDoc.getElementsByTagName("food")[i].childNodes[1].nodeValue;
+                                    console.log("get price OK");
+                                var unPrice = xmlDoc.getElementsByTagName("food")[i].childNodes[1];
+                                    console.log(unPrice);
+                                newPriceNode = xmlDoc.createElement("price");
+                                    console.log("create new price node OK");
+                                newPrice = xmlDoc.createTextNode(price+(price * 0.2));
+                                    console.log("calculate new price OK");
+
+                                newPriceNode.appendChild(newPrice);
+                                    console.log("append price to price node OK");
+                                xmlDoc.getElementsByTagName("food")[i].replaceChild(newPriceNode, unPrice);
+                                    console.log("append new price node OK");
+                            }
+                            document.getElementById("demo2").innerHTML = xmlDoc.getElementsByTagName("breakfast_menu")[0].textContent;
+								console.log("second responseText OK");
+                        }
+                    };
+		xml.open("GET", "breakfast.xml", true);
+					console.log("open OK");
+        xml.send();
+					console.log("send OK");
+        }
+ 
+        
+    </script>
+   
+    </body>
+</html>
